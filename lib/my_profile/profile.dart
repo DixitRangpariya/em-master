@@ -4,6 +4,7 @@ import 'package:expanse_manage/common_widget/common_textbutton.dart';
 import 'package:expanse_manage/my_profile/change_password.dart';
 import 'package:expanse_manage/my_profile/mobail.dart';
 import 'package:expanse_manage/my_profile/my_profile_controller.dart';
+import 'package:expanse_manage/screens/about.dart';
 import 'package:expanse_manage/signup_screen/signup_controller.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
@@ -25,69 +26,46 @@ class Profile extends StatelessWidget {
       appBar: CommonAppBar(title: 'Profile', hasBackIcon: false),
       body: Column(
         children: [
-          Row(
-            mainAxisAlignment: MainAxisAlignment.spaceAround,
+          Container(
+            decoration: BoxDecoration(
+                borderRadius: BorderRadius.circular(60),
+                border: Border.all(
+                  width: 4,
+                  color: AppColor.darkBlue,
+                  style: BorderStyle.solid,
+                )),
+            child: const CircleAvatar(
+              radius: 50.0,
+              // backgroundImage: AssetImage(AppImage.profile),
+              backgroundColor: AppColor.darkBlue,
+              // child: ClipRRect(
+              //   child: Image.asset(AppImage.profile),
+              //   borderRadius: BorderRadius.circular(100.0),
+              // ),
+            ),
+          ),
+          SizedBox(
+            height: 20,
+          ),
+          Column(
+            crossAxisAlignment: CrossAxisAlignment.center,
             children: [
-              Container(
-                decoration: BoxDecoration(
-                    borderRadius: BorderRadius.circular(60),
-                    border: Border.all(
-                      width: 4,
-                      color: AppColor.darkBlue,
-                      style: BorderStyle.solid,
-                    )),
-                child: const CircleAvatar(
-                  radius: 50.0,
-                  // backgroundImage: AssetImage(AppImage.profile),
-                  backgroundColor: AppColor.darkBlue,
-                  // child: ClipRRect(
-                  //   child: Image.asset(AppImage.profile),
-                  //   borderRadius: BorderRadius.circular(100.0),
-                  // ),
-                ),
+              CustomText("Username",
+                  fontWeight: FontWeight.w500,
+                  size: 15,
+                  color: Colors.black.withOpacity(0.4)),
+              const SizedBox(
+                height: 10,
               ),
-              Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  CustomText("Username",
-                      fontWeight: FontWeight.w500,
-                      size: 20,
-                      color: Colors.black.withOpacity(0.4)),
-                  const SizedBox(
-                    height: 10,
-                  ),
-                  const CustomText(
-                    "Dixit Rangpariya",
-                    fontWeight: FontWeight.bold,
-                    size: 18,
-                  ),
-                ],
+              const CustomText(
+                "Dixit Rangpariya",
+                fontWeight: FontWeight.bold,
+                size: 20,
               ),
             ],
           ),
           const SizedBox(
-            height: 30,
-          ),
-          Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: const [
-              CustomText(
-                "Email",
-                fontWeight: FontWeight.w600,
-                size: 12,
-              ),
-              SizedBox(
-                height: 10,
-              ),
-              CustomText(
-                "dixitrangpariya@gmail.com",
-                fontWeight: FontWeight.bold,
-                size: 18,
-              ),
-              SizedBox(
-                height: 25,
-              ),
-            ],
+            height: 20,
           ),
           const SizedBox(
             height: 5,
@@ -108,7 +86,7 @@ class Profile extends StatelessWidget {
                   text: 'Logout'),
               buildTextButton(
                   onPressed: () {
-                    // Get.to(ChangePassword());
+                    Get.to(Aboutus());
                   },
                   text: 'About Us'),
               buildTextButton(
