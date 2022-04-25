@@ -24,7 +24,9 @@ class _AddloanState extends State<Addloan> {
   Widget build(BuildContext context) {
     return Scaffold(
         appBar: CommonAppBar(
-            title: 'Add Loan', hasBackIcon: true, actionIcon: Icon(Icons.add)),
+          title: 'Add Loan',
+          hasBackIcon: true,
+        ),
         body: Column(
           children: [
             Card(
@@ -152,7 +154,7 @@ class _AddloanState extends State<Addloan> {
                                   height: 10,
                                 ),
                                 CustomText(
-                                  'Percentage : ${data['percentage']}%',
+                                  'Amount : ${data['percentage']}%',
                                   size: 15,
                                   fontWeight: FontWeight.w600,
                                   color: Colors.white,

@@ -24,6 +24,11 @@ class FeaturesController extends GetxController {
   TextEditingController amountin = TextEditingController();
   TextEditingController descriptionin = TextEditingController();
 
+  TextEditingController money_leadername = TextEditingController();
+  TextEditingController mobail_number = TextEditingController();
+  TextEditingController amountintrest = TextEditingController();
+  TextEditingController percentageinrest = TextEditingController();
+
   DateTime transactiondate = DateTime.now();
   Future<void> createLoan() async {
     CollectionReference expanse =
@@ -47,7 +52,7 @@ class FeaturesController extends GetxController {
         .add({
           'product_name': product_name.text,
           'amount': amount.text,
-          'date': DateTime.now(),
+          'date': DateTime.now().toIso8601String(),
           'description': description.text,
         })
         .then((value) => debugPrint('Value added :: ${value.id}'))
@@ -63,8 +68,23 @@ class FeaturesController extends GetxController {
           'business_type': businessName.text,
           'business_address': businessAddress.text,
           'amount': amountin.text,
-          'date': DateTime.now(),
+          'date': DateTime.now().toIso8601String(),
           'description': descriptionin.text,
+        })
+        .then((value) => debugPrint('Value added :: ${value.id}'))
+        .catchError((error) => debugPrint('Value added :: $error'));
+  }
+
+  Future<void> createIntrest() async {
+    CollectionReference expanse = FirebaseFirestore.instance
+        .collection('users/${currentUser!.uid}/intrest');
+    await expanse
+        .add({
+          'money_leadername': money_leadername.text,
+          'mobail_no': mobail_number.text,
+          'amountintrest': amountintrest.text,
+          'pay_date': DateTime.now().toIso8601String(),
+          'return_date': DateTime.now().toIso8601String(),
         })
         .then((value) => debugPrint('Value added :: ${value.id}'))
         .catchError((error) => debugPrint('Value added :: $error'));
@@ -97,6 +117,20 @@ class FeaturesController extends GetxController {
   Stream<QuerySnapshot> fetchloan() {
     var data = FirebaseFirestore.instance
         .collection('users/${currentUser!.uid}/loan')
+        .snapshots();
+    return data;
+  }
+
+  Stream<QuerySnapshot> feachinvestment() {
+    var data = FirebaseFirestore.instance
+        .collection('users/${currentUser!.uid}/investment')
+        .snapshots();
+    return data;
+  }
+
+  Stream<QuerySnapshot> feachbill() {
+    var data = FirebaseFirestore.instance
+        .collection('users/${currentUser!.uid}/bill')
         .snapshots();
     return data;
   }

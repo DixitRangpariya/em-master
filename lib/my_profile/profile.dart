@@ -5,6 +5,8 @@ import 'package:expanse_manage/my_profile/change_password.dart';
 import 'package:expanse_manage/my_profile/mobail.dart';
 import 'package:expanse_manage/my_profile/my_profile_controller.dart';
 import 'package:expanse_manage/screens/about.dart';
+import 'package:expanse_manage/screens/creditcard/addcard.dart';
+import 'package:expanse_manage/screens/creditcard/card.dart';
 import 'package:expanse_manage/signup_screen/signup_controller.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
@@ -94,6 +96,11 @@ class Profile extends StatelessWidget {
                     Get.to(generatepdf());
                   },
                   text: 'Export Data'),
+              buildTextButton(
+                  onPressed: () {
+                    Get.to(Cardadd());
+                  },
+                  text: 'card Data'),
             ]),
           ),
         ],
@@ -156,7 +163,12 @@ Future<void> generatepdf() async {
 
   for (var i = 0; i < list.length; i++) {
     row = grid.rows.add();
-    row.cells[0].value = list[i]['isExpanse'];
+    if (list[i]['isExpanse'] == true) {
+      // row.cells[0].value = list[i]['isExpanse'];
+      row.cells[0].value = 'Expanse';
+    } else {
+      row.cells[0].value = 'Income';
+    }
     row.cells[1].value = list[i]['categoryName'];
     row.cells[2].value = list[i]['transactionDate'];
     row.cells[3].value = list[i]['amount'];

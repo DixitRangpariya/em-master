@@ -1,6 +1,7 @@
 import 'package:expanse_manage/common_widget/common_text.dart';
 import 'package:expanse_manage/common_widget/common_text_form_field.dart';
 import 'package:expanse_manage/common_widget/common_textbutton.dart';
+import 'package:expanse_manage/controller/feture_controller.dart';
 import 'package:expanse_manage/res/app_image.dart';
 import 'package:expanse_manage/screens/checkmark.dart';
 import 'package:flutter/material.dart';
@@ -17,6 +18,8 @@ class Intrest extends StatefulWidget {
 }
 
 class _IntrestState extends State<Intrest> {
+  final controller = Get.put(FeaturesController());
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -212,70 +215,109 @@ class _IntrestState extends State<Intrest> {
         ),
         context: context,
         builder: (BuildContext context) {
-          return Padding(
-            padding: const EdgeInsets.all(20),
-            child: Container(
+          DateTime selectedDate = controller.transactiondate;
+          return GetBuilder<FeaturesController>(
+            init: controller,
+            builder: (controller) => Container(
                 height: 500,
-                child: ListView(
-                  children: [
-                    Image.asset(AppImage.loan, width: 50, height: 50),
-                    SizedBox(
-                      height: 10,
-                    ),
-                    CustomText(
-                      'Enter Your Intrest Detail',
-                      size: 22,
-                      fontWeight: FontWeight.w500,
-                      color: AppColor.black.withOpacity(0.5),
-                    ),
-                    SizedBox(
-                      height: 10,
-                    ),
-                    CommonTextFormField(
-                      hintText: 'Money Leader Name',
-                    ),
-                    CommonTextFormField(
-                      hintText: 'Mobile No',
-                      keyboardType: TextInputType.number,
-                    ),
-                    CommonTextFormField(
-                      hintText: 'Refrence Person Name',
-                      keyboardType: TextInputType.number,
-                    ),
-                    CommonTextFormField(
-                      hintText: 'Refrence Person Mobaile',
-                    ),
-                    CommonTextFormField(
-                      hintText: 'Amount',
-                    ),
-                    CommonTextFormField(
-                      hintText: 'Percentage',
-                    ),
-                    CommonTextFormField(
-                      hintText: 'Pay Date',
-                    ),
-                    CommonTextFormField(
-                      hintText: 'Return Date',
-                    ),
-                    CommonTextFormField(
-                      hintText: 'Description',
-                    ),
-                    CommonTextButton(
-                      onPressed: () {
-                        Get.to(Chekmark());
-                      },
-                      child: Row(
-                        mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                        children: [
-                          Text(
-                            'Add Loan',
-                            style:
-                                TextStyle(fontSize: 22, color: AppColor.white),
-                          )
-                        ],
+                child: Padding(
+                  padding: const EdgeInsets.all(10),
+                  child: ListView(
+                    children: [
+                      Image.asset(AppImage.loan, width: 50, height: 50),
+                      SizedBox(
+                        height: 10,
                       ),
-                    )
-                  ],
+                      CustomText(
+                        'Enter Your Intrest Detail',
+                        size: 22,
+                        fontWeight: FontWeight.w500,
+                        color: AppColor.black.withOpacity(0.5),
+                      ),
+                      SizedBox(
+                        height: 10,
+                      ),
+                      CommonTextFormField(
+                        controller: controller.money_leadername,
+                        hintText: 'Money Leader Name',
+                      ),
+                      CommonTextFormField(
+                        hintText: 'Mobile No',
+                        controller: controller.mobail_number,
+                        keyboardType: TextInputType.number,
+                      ),
+                      CommonTextFormField(
+                        hintText: 'Amount',
+                        controller: controller.amountintrest,
+                      ),
+                      CommonTextFormField(
+                        hintText: 'Percentage',
+                        controller: controller.percentageinrest,
+                      ),
+                      CommonTextButton(
+                          // text: 'Pay Date',
+                          radius: 8,
+                          onPressed: () => controller.selectDate(context),
+                          buttonColor: Color.fromARGB(226, 255, 255, 255),
+                          vertical: 10,
+                          // horizontal: Get.width * 0.001,
+                          child: Row(
+                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                            children: [
+                              CustomText(
+                                '''${selectedDate.day} / ${selectedDate.month} / ${selectedDate.year}''',
+                                color: AppColor.textColorDark,
+                                size: 18,
+                              ),
+                              const Icon(
+                                Icons.calendar_today_outlined,
+                                color: AppColor.textColorDark,
+                              )
+                            ],
+                          ),
+                          buttonWidth: Get.width,
+                          buttonHeight: 3),
+                      CommonTextButton(
+                          // text: 'Pay Date',
+                          radius: 8,
+                          onPressed: () => controller.selectDate(context),
+                          buttonColor: Color.fromARGB(226, 255, 255, 255),
+                          vertical: 10,
+                          // horizontal: Get.width * 0.001,
+                          child: Row(
+                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                            children: [
+                              CustomText(
+                                '''${selectedDate.day} / ${selectedDate.month} / ${selectedDate.year}''',
+                                color: AppColor.textColorDark,
+                                size: 18,
+                              ),
+                              const Icon(
+                                Icons.calendar_today_outlined,
+                                color: AppColor.textColorDark,
+                              )
+                            ],
+                          ),
+                          buttonWidth: Get.width,
+                          buttonHeight: 3),
+                      CommonTextButton(
+                        onPressed: () {
+                          controller.createIntrest();
+                          // Get.to(Chekmark());
+                        },
+                        child: Row(
+                          mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                          children: [
+                            Text(
+                              'Add Intrest',
+                              style: TextStyle(
+                                  fontSize: 22, color: AppColor.white),
+                            )
+                          ],
+                        ),
+                      )
+                    ],
+                  ),
                 )),
           );
         });

@@ -1,3 +1,4 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:expanse_manage/common_widget/common_text.dart';
 import 'package:expanse_manage/common_widget/common_text_form_field.dart';
 import 'package:expanse_manage/common_widget/common_textbutton.dart';
@@ -84,93 +85,97 @@ class _InvestmentState extends State<Investment> {
                 ),
               ),
             ),
-            Card(
-              // color: Color.fromARGB(255, 50, 67, 114),
-              margin: const EdgeInsets.all(20),
-              elevation: 2,
-              shape: RoundedRectangleBorder(
-                  borderRadius: BorderRadius.circular(20)),
-              // child: Padding(
-              // padding: EdgeInsets.all(20),
-              child: Container(
-                decoration: BoxDecoration(
-                    borderRadius: BorderRadius.circular(20),
-                    gradient: LinearGradient(
-                      stops: [
-                        0.13,
-                        0.90,
-                      ],
-                      begin: Alignment.bottomLeft,
-                      end: Alignment.topRight,
-                      colors: [
-                        Color.fromARGB(255, 50, 67, 114),
-                        Color.fromARGB(255, 80, 114, 172),
-                      ],
-                    )),
-                // height: 180,
-                width: double.infinity,
-                child: Padding(
-                  padding: const EdgeInsets.all(20),
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: const [
-                      CustomText(
-                        'Business Name : Car Loan',
-                        size: 15,
-                        fontWeight: FontWeight.w600,
-                        color: Colors.white,
-                      ),
-                      SizedBox(
-                        height: 10,
-                      ),
-                      CustomText(
-                        'Business Type : \$5000',
-                        size: 15,
-                        fontWeight: FontWeight.w600,
-                        color: Colors.white,
-                      ),
-                      SizedBox(
-                        height: 10,
-                      ),
-                      CustomText(
-                        'Address : \$200',
-                        size: 15,
-                        fontWeight: FontWeight.w600,
-                        color: Colors.white,
-                      ),
-                      SizedBox(
-                        height: 10,
-                      ),
-                      CustomText(
-                        'Amount : 5%',
-                        size: 15,
-                        fontWeight: FontWeight.w600,
-                        color: Colors.white,
-                      ),
-                      SizedBox(
-                        height: 10,
-                      ),
-                      CustomText(
-                        'Transaction Date : 3/5/2022',
-                        size: 15,
-                        fontWeight: FontWeight.w600,
-                        color: Colors.white,
-                      ),
-                      SizedBox(
-                        height: 10,
-                      ),
-                      CustomText(
-                        'Description : sdf jjowieo ier',
-                        maxLines: 50,
-                        size: 15,
-                        fontWeight: FontWeight.w600,
-                        color: Colors.white,
-                      ),
-                    ],
-                  ),
-                ),
-              ),
-            ),
+            StreamBuilder<QuerySnapshot>(
+                stream: controller.feachinvestment(),
+                builder: (context, snapshot) {
+                  if (!snapshot.hasData) {
+                    return Text('No Data available');
+                  }
+                  if (snapshot.connectionState == ConnectionState.waiting) {
+                    return const Center(
+                      child: CircularProgressIndicator(),
+                    );
+                  }
+                  return Expanded(
+                    child: ListView.builder(
+                        itemCount: snapshot.data!.docs.length,
+                        physics: const BouncingScrollPhysics(),
+                        itemBuilder: (context, index) {
+                          var data = snapshot.data!.docs[index];
+                          DateTime date = DateTime.parse(data['date']);
+                          return Container(
+                            margin: const EdgeInsets.all(20),
+                            decoration: BoxDecoration(
+                                borderRadius: BorderRadius.circular(20),
+                                //elevation:2,
+                                gradient: const LinearGradient(
+                                  stops: [
+                                    0.13,
+                                    0.90,
+                                  ],
+                                  begin: Alignment.bottomLeft,
+                                  end: Alignment.topRight,
+                                  colors: [
+                                    Color.fromARGB(255, 50, 67, 114),
+                                    Color.fromARGB(255, 80, 114, 172),
+                                  ],
+                                )),
+                            // height: 180,
+                            width: double.infinity,
+                            child: Padding(
+                              padding: const EdgeInsets.all(20),
+                              child: Column(
+                                crossAxisAlignment: CrossAxisAlignment.start,
+                                children: [
+                                  CustomText(
+                                    'Business Name : ${data['business_name']}',
+                                    size: 20,
+                                    fontWeight: FontWeight.w600,
+                                    color: Colors.white,
+                                  ),
+                                  SizedBox(
+                                    height: 10,
+                                  ),
+                                  CustomText(
+                                    'Amount : ₹${data['business_type']}',
+                                    size: 15,
+                                    fontWeight: FontWeight.w600,
+                                    color: Colors.white,
+                                  ),
+                                  SizedBox(
+                                    height: 10,
+                                  ),
+                                  CustomText(
+                                    'Installment : ₹${data['business_address']}',
+                                    size: 15,
+                                    fontWeight: FontWeight.w600,
+                                    color: Colors.white,
+                                  ),
+                                  SizedBox(
+                                    height: 10,
+                                  ),
+                                  CustomText(
+                                    'Percentage : ${data['amount']}',
+                                    size: 15,
+                                    fontWeight: FontWeight.w600,
+                                    color: Colors.white,
+                                  ),
+                                  SizedBox(
+                                    height: 10,
+                                  ),
+                                  CustomText(
+                                    ' Date : ${date.day}/${date.month}/${date.year}',
+                                    size: 15,
+                                    fontWeight: FontWeight.w600,
+                                    color: Colors.white,
+                                  ),
+                                ],
+                              ),
+                            ),
+                          );
+                        }),
+                  );
+                }),
           ],
         ));
   }
