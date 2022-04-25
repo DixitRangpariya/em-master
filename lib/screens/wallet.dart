@@ -1,3 +1,4 @@
+import 'package:expanse_manage/Bugest/addtrip.dart';
 import 'package:expanse_manage/common_widget/common_appbar.dart';
 import 'package:expanse_manage/common_widget/common_iconbutton.dart';
 import 'package:expanse_manage/common_widget/common_text.dart';
@@ -10,7 +11,6 @@ import 'package:expanse_manage/screens/addintrest.dart';
 import 'package:expanse_manage/screens/addloan.dart';
 import 'package:expanse_manage/screens/loandetails.dart';
 import 'package:expanse_manage/screens/tips.dart';
-import 'package:expanse_manage/trip/addtrip.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:get/get_core/get_core.dart';
@@ -143,7 +143,7 @@ class Wallet extends StatelessWidget {
                 ),
                 InkWell(
                   onTap: () {
-                    Get.to(Tips());
+                    Get.to(Addtrip());
                   },
                   child: Container(
                     decoration: boxDecoration(),
@@ -154,9 +154,9 @@ class Wallet extends StatelessWidget {
                       child: Row(
                         mainAxisAlignment: MainAxisAlignment.spaceBetween,
                         children: [
-                          CustomText('Finance Tips',
+                          CustomText('bugest',
                               fontWeight: FontWeight.w500,
-                              size: 15,
+                              size: 20,
                               color: AppColor.white),
                           Icon(
                             Icons.arrow_circle_right,

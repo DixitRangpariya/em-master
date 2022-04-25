@@ -23,7 +23,9 @@ class _AddtripState extends State<Addtrip> {
   Widget build(BuildContext context) {
     return Scaffold(
         appBar: CommonAppBar(
-            title: 'Add Loan', hasBackIcon: true, actionIcon: Icon(Icons.add)),
+          title: 'Add Bugest',
+          hasBackIcon: true,
+        ),
         body: Column(
           children: [
             Card(
@@ -44,7 +46,7 @@ class _AddtripState extends State<Addtrip> {
                         height: 10,
                       ),
                       CustomText(
-                        'Make a Trip',
+                        'Make a Bugest',
                         size: 20,
                         fontWeight: FontWeight.w500,
                       ),
@@ -52,7 +54,7 @@ class _AddtripState extends State<Addtrip> {
                         height: 10,
                       ),
                       CustomText(
-                        'Creat Your Trip just a second.',
+                        'Creat Your Bugest just a second.',
                         size: 15,
                         // fontWeight: FontWeight.normal,
                         color: Colors.black.withOpacity(0.4),
@@ -67,18 +69,63 @@ class _AddtripState extends State<Addtrip> {
                             Icon(Icons.add_box_rounded,
                                 size: 25, color: AppColor.white),
                             Text(
-                              'Create Loan',
+                              'Create Bugest',
                               style: TextStyle(
                                   fontSize: 22, color: AppColor.white),
                             )
                           ],
                         ),
-                      )
+                      ),
                     ],
                   ),
                 ),
               ),
             ),
+            Card(
+              color: Color.fromARGB(245, 235, 242, 252),
+              margin: const EdgeInsets.all(20),
+              elevation: 2,
+              shape: RoundedRectangleBorder(
+                  borderRadius: BorderRadius.circular(25)),
+              child: Padding(
+                padding: EdgeInsets.all(Get.width / 20),
+                child: Column(children: [
+                  CustomText(
+                    'Budget Name',
+                    size: 15,
+                    fontWeight: FontWeight.w500,
+                    color: AppColor.textColorDark.withOpacity(0.5),
+                  ),
+                  const SizedBox(
+                    height: 20,
+                  ),
+                  Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      children: [
+                        const CustomText(
+                          '\$2000.26',
+                          size: 25,
+                          fontWeight: FontWeight.w600,
+                        ),
+                        CustomText(
+                          '\$5000.00',
+                          size: 20,
+                          fontWeight: FontWeight.w400,
+                          color: Colors.black.withOpacity(0.5),
+                        )
+                      ]),
+                  const SizedBox(
+                    height: 20,
+                  ),
+                  const LinearProgressIndicator(
+                    value: 0.7,
+                    minHeight: 5,
+                    color: AppColor.darkBlue,
+                    backgroundColor: Colors.grey,
+                  )
+                ]),
+              ),
+            )
           ],
         ));
   }
@@ -99,7 +146,7 @@ class _AddtripState extends State<Addtrip> {
           return GetBuilder<FeaturesController>(
             init: controller,
             builder: (controller) => Container(
-                height: Get.height / 1.2,
+                height: Get.height / 1.7,
                 child: Padding(
                   padding: const EdgeInsets.all(20),
                   child: Column(
@@ -110,7 +157,7 @@ class _AddtripState extends State<Addtrip> {
                         height: 10,
                       ),
                       CustomText(
-                        'Enter Your Trip Detail',
+                        'Enter Your Bugest Detail',
                         size: 22,
                         fontWeight: FontWeight.w500,
                         color: AppColor.black.withOpacity(0.5),
@@ -119,53 +166,21 @@ class _AddtripState extends State<Addtrip> {
                         height: 10,
                       ),
                       CommonTextFormField(
-                        hintText: 'Location',
-                        controller: controller.loanName,
+                        hintText: 'Select Category',
                       ),
                       CommonTextFormField(
-                        hintText: 'Trip Budgest',
-                        controller: controller.amunt,
+                        hintText: 'Amount',
                         keyboardType: TextInputType.number,
                       ),
                       CommonTextFormField(
-                        hintText: 'Installment',
-                        controller: controller.installment,
-                        keyboardType: TextInputType.number,
+                        hintText: 'Note',
                       ),
-                      CommonTextFormField(
-                        hintText: 'Percentage',
-                        controller: controller.percentage,
-                      ),
-                      CommonTextButton(
-                          radius: 8,
-                          onPressed: () => controller.selectDate(context),
-                          buttonColor: AppColor.blueShade50,
-                          elevation: 3,
-                          vertical: Get.height / 20,
-                          horizontal: Get.width * 0.001,
-                          child: Row(
-                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                            children: [
-                              CustomText(
-                                '''${selectedDate.day} / ${selectedDate.month} / ${selectedDate.year}''',
-                                color: AppColor.textColorDark,
-                                size: 18,
-                              ),
-                              const Icon(
-                                Icons.calendar_today_outlined,
-                                color: AppColor.textColorDark,
-                              )
-                            ],
-                          ),
-                          buttonWidth: Get.width,
-                          buttonHeight: Get.height / 14),
-                      // CommonTextButton(onPressed: (){},),
+
                       CommonTextButton(
                         onPressed: () {
-                          controller.createLoan();
                           Get.to(Chekmark());
                         },
-                        text: 'Add Loan',
+                        text: 'Add Bugest',
                       )
                     ],
                   ),
