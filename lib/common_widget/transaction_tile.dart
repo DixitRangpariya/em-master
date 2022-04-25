@@ -9,7 +9,7 @@ class TransactionTile extends StatelessWidget {
   final dashController = Get.find<DashBoardController>();
   final GestureLongPressCallback? onLongPress;
   final dynamic transactionData;
-  final String documentId;
+  final String? documentId;
   final bool isExpanse;
   final Color color;
 
@@ -18,7 +18,7 @@ class TransactionTile extends StatelessWidget {
     this.transactionData,
     required this.isExpanse,
     required this.color,
-    required this.documentId,
+    this.documentId,
     this.onLongPress,
   }) : super(key: key);
 
@@ -67,7 +67,7 @@ class TransactionTile extends StatelessWidget {
         padding: const EdgeInsets.only(right: 20),
       ),
       onDismissed: (direction) {
-        dashController.deleteTransaction(documentId, isExpanse);
+        dashController.deleteTransaction(documentId!, isExpanse);
       },
       child: ListTile(
         onLongPress: onLongPress,

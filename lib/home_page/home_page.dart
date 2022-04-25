@@ -161,22 +161,53 @@ class HomePage extends StatelessWidget {
                         ],
                       ),
                     ),
-                    controller.serch.text.trim().isEmpty
+                    controller.serch.text.trim().isNotEmpty
                         ? StreamBuilder<QuerySnapshot>(
                             stream: controller.serchMethode(),
                             builder: (context, snapshot) {
+                              if (snapshot.connectionState ==
+                                  ConnectionState.waiting) {
+                                return const Center(
+                                  child: CircularProgressIndicator(),
+                                );
+                              }
+                              if (snapshot.data!.docs.length.isEqual(0)) {
+                                return Center(
+                                  child: Column(
+                                    mainAxisAlignment:
+                                        MainAxisAlignment.spaceAround,
+                                    children: [
+                                      const SizeBoxH(10),
+                                      Image.asset(AppImage.noData2,
+                                          height: Get.height / 4.5,
+                                          width: Get.width / 2.5,
+                                          fit: BoxFit.contain),
+                                      const CustomText(
+                                        '\nNo data found',
+                                        size: 20,
+                                        color: AppColor.textColorDark,
+                                        textAlign: TextAlign.center,
+                                      ),
+                                      const SizeBoxH(150)
+                                    ],
+                                  ),
+                                );
+                              }
+
                               return ListView.builder(
+                                shrinkWrap: true,
+                                physics: const BouncingScrollPhysics(),
+                                itemCount: snapshot.data!.docs.length,
                                 itemBuilder: (context, index) {
                                   var data = snapshot.data!.docs[index];
                                   return TransactionTile(
                                     isExpanse: data['isExpanse'],
                                     color: AppColor.shadowColor,
-                                    documentId: data.reference.id,
+                                    transactionData: data,
                                   );
                                 },
                               );
-                            },
-                          )
+                            })
                         : StreamBuilder<QuerySnapshot>(
                             stream: controller.fetchTransaction(),
                             builder: (context, snapshot) {
@@ -213,8 +244,7 @@ class HomePage extends StatelessWidget {
                                 children: [
                                   ListView.builder(
                                     shrinkWrap: true,
-                                    physics:
-                                        const NeverScrollableScrollPhysics(),
+                                    physics: const BouncingScrollPhysics(),
                                     itemCount: snapshot.data!.docs.length,
                                     itemBuilder: (context, index) {
                                       var transactionData =

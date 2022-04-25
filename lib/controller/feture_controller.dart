@@ -34,7 +34,7 @@ class FeaturesController extends GetxController {
           'amount': amunt.text,
           'installment': installment.text,
           'percentage': percentage.text,
-          'date': DateTime.now(),
+          'date': DateTime.now().toIso8601String(),
         })
         .then((value) => debugPrint('Value added :: ${value.id}'))
         .catchError((error) => debugPrint('Value added :: $error'));
@@ -94,9 +94,9 @@ class FeaturesController extends GetxController {
     update();
   }
 
-  Stream<QuerySnapshot<Object?>> fetchloan() {
+  Stream<QuerySnapshot> fetchloan() {
     var data = FirebaseFirestore.instance
-        .collection('users/${currentUser!.uid}/')
+        .collection('users/${currentUser!.uid}/loan')
         .snapshots();
     return data;
   }

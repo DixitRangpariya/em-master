@@ -133,6 +133,7 @@ class DashBoardController extends GetxController {
         .collection('users/${currentUser!.uid}/transaction')
         .where('categoryName', isEqualTo: serch.text)
         .snapshots();
+    update();
     return transaction;
     //     .get()
     //     .then((value) {

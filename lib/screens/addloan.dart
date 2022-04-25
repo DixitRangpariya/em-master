@@ -1,3 +1,4 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:expanse_manage/common_widget/common_text.dart';
 import 'package:expanse_manage/common_widget/common_text_form_field.dart';
 import 'package:expanse_manage/common_widget/common_textbutton.dart';
@@ -79,78 +80,100 @@ class _AddloanState extends State<Addloan> {
                 ),
               ),
             ),
-            Card(
-              margin: const EdgeInsets.all(20),
-              elevation: 2,
-              child: Container(
-                decoration: BoxDecoration(
-                    borderRadius: BorderRadius.circular(20),
-                    gradient: LinearGradient(
-                      stops: [
-                        0.13,
-                        0.90,
-                      ],
-                      begin: Alignment.bottomLeft,
-                      end: Alignment.topRight,
-                      colors: [
-                        Color.fromARGB(255, 50, 67, 114),
-                        Color.fromARGB(255, 80, 114, 172),
-                      ],
-                    )),
-                // height: 180,
-                width: double.infinity,
-                child: Padding(
-                  padding: const EdgeInsets.all(20),
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: const [
-                      CustomText(
-                        'Loan Name : Car Loan',
-                        size: 20,
-                        fontWeight: FontWeight.w600,
-                        color: Colors.white,
-                      ),
-                      SizedBox(
-                        height: 10,
-                      ),
-                      CustomText(
-                        'Amount : \$5000',
-                        size: 15,
-                        fontWeight: FontWeight.w600,
-                        color: Colors.white,
-                      ),
-                      SizedBox(
-                        height: 10,
-                      ),
-                      CustomText(
-                        'Installment : \$200',
-                        size: 15,
-                        fontWeight: FontWeight.w600,
-                        color: Colors.white,
-                      ),
-                      SizedBox(
-                        height: 10,
-                      ),
-                      CustomText(
-                        'Percentage : 5%',
-                        size: 15,
-                        fontWeight: FontWeight.w600,
-                        color: Colors.white,
-                      ),
-                      SizedBox(
-                        height: 10,
-                      ),
-                      CustomText(
-                        'Installment Date : 3/5/2022',
-                        size: 15,
-                        fontWeight: FontWeight.w600,
-                        color: Colors.white,
-                      ),
-                    ],
-                  ),
-                ),
-              ),
-            ),
+            StreamBuilder<QuerySnapshot>(
+              stream: controller.fetchloan(),
+              builder: (context, snapshot) {
+                if (!snapshot.hasData) {
+                  return Text('No Data available');
+                }
+                if (snapshot.connectionState == ConnectionState.waiting) {
+                  return const Center(
+                    child: CircularProgressIndicator(),
+                  );
+                }
+
+                return Expanded(
+                  child: ListView.builder(
+                      itemCount: snapshot.data!.docs.length,
+                      physics: const BouncingScrollPhysics(),
+                      itemBuilder: (context, index) {
+                        var data = snapshot.data!.docs[index];
+                        DateTime date = DateTime.parse(data['date']);
+                        return Container(
+                          margin: const EdgeInsets.all(20),
+
+                          decoration: BoxDecoration(
+                              borderRadius: BorderRadius.circular(20),
+                              //elevation:2,
+                              gradient: const LinearGradient(
+                                stops: [
+                                  0.13,
+                                  0.90,
+                                ],
+                                begin: Alignment.bottomLeft,
+                                end: Alignment.topRight,
+                                colors: [
+                                  Color.fromARGB(255, 50, 67, 114),
+                                  Color.fromARGB(255, 80, 114, 172),
+                                ],
+                              )),
+                          // height: 180,
+                          width: double.infinity,
+                          child: Padding(
+                            padding: const EdgeInsets.all(20),
+                            child: Column(
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              children: [
+                                CustomText(
+                                  'Loan Name : ${data['loan_name']}',
+                                  size: 20,
+                                  fontWeight: FontWeight.w600,
+                                  color: Colors.white,
+                                ),
+                                SizedBox(
+                                  height: 10,
+                                ),
+                                CustomText(
+                                  'Amount : ₹${data['amount']}',
+                                  size: 15,
+                                  fontWeight: FontWeight.w600,
+                                  color: Colors.white,
+                                ),
+                                SizedBox(
+                                  height: 10,
+                                ),
+                                CustomText(
+                                  'Installment : ₹${data['installment']}',
+                                  size: 15,
+                                  fontWeight: FontWeight.w600,
+                                  color: Colors.white,
+                                ),
+                                SizedBox(
+                                  height: 10,
+                                ),
+                                CustomText(
+                                  'Percentage : ${data['percentage']}%',
+                                  size: 15,
+                                  fontWeight: FontWeight.w600,
+                                  color: Colors.white,
+                                ),
+                                SizedBox(
+                                  height: 10,
+                                ),
+                                CustomText(
+                                  'Installment Date : ${date.day}/${date.month}/${date.year}',
+                                  size: 15,
+                                  fontWeight: FontWeight.w600,
+                                  color: Colors.white,
+                                ),
+                              ],
+                            ),
+                          ),
+                        );
+                      }),
+                );
+              },
+            )
           ],
         ));
   }
@@ -233,9 +256,9 @@ class _AddloanState extends State<Addloan> {
                           buttonHeight: Get.height / 14),
                       // CommonTextButton(onPressed: (){},),
                       CommonTextButton(
-                        onPressed: () {
-                          controller.createLoan();
-                          Get.to(Chekmark());
+                        onPressed: () async {
+                          await controller.createLoan();
+                          Get.back();
                         },
                         text: 'Add Loan',
                       )
