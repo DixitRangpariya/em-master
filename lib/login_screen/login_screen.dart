@@ -20,82 +20,95 @@ class LoginScreen extends StatelessWidget {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: _buildAppBar(),
-      body: SingleChildScrollView(
-          child: Padding(
-        padding: EdgeInsets.symmetric(horizontal: Get.width / 25),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.center,
-          children: [
-            Image.asset(
-              AppImage.logoL,
-              width: Get.width / 3,
-              alignment: Alignment.center,
-            ),
-            const Align(
-              alignment: Alignment.centerLeft,
-              child: CustomText(
-                '\n  Login to Your Account   ',
-                size: 23,
-                textAlign: TextAlign.start,
-                fontWeight: FontWeight.w600,
-              ),
-            ),
-            Form(
-              key: authController.loginFormKey,
-              autovalidateMode: AutovalidateMode.always,
-              child: Column(
-                children: [
-                  CommonTextFormField(
-                    hintText: 'Username',
-                    underLineBorder: true,
-                    controller: authController.email,
-                    validation: (String? value) =>
-                        authController.userNameValidation(value!),
+      body: GetBuilder<AuthController>(
+        init: authController,
+        builder: (controller) {
+          return SingleChildScrollView(
+              child: Padding(
+            padding: EdgeInsets.symmetric(horizontal: Get.width / 25),
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.center,
+              children: [
+                Image.asset(
+                  AppImage.logoL,
+                  width: Get.width / 3,
+                  alignment: Alignment.center,
+                ),
+                const Align(
+                  alignment: Alignment.centerLeft,
+                  child: CustomText(
+                    '\n  Login to Your Account   ',
+                    size: 23,
+                    textAlign: TextAlign.start,
+                    fontWeight: FontWeight.w600,
                   ),
-                  CommonTextFormField(
-                    hintText: 'Password',
-                    controller: authController.password,
-                    suffixIcon: Icon(Icons.remove_red_eye),
-                    validation: (String? value) =>
-                        authController.passwordValidation(value!),
-                    underLineBorder: true,
+                ),
+                Form(
+                  key: authController.loginFormKey,
+                  autovalidateMode: AutovalidateMode.always,
+                  child: Column(
+                    children: [
+                      CommonTextFormField(
+                        hintText: 'Username',
+                        underLineBorder: true,
+                        controller: authController.email,
+                        validation: (String? value) =>
+                            authController.userNameValidation(value!),
+                      ),
+                      CommonTextFormField(
+                        hintText: 'Password',
+                        controller: authController.password,
+                        obscureText: authController.logPasswordBool,
+                        suffixIcon: IconButton(
+                          onPressed: () => authController.showLogPassword,
+                          icon: Icon(
+                            !authController.logPasswordBool
+                                ? Icons.remove_red_eye
+                                : Icons.visibility_off,
+                          ),
+                        ),
+                        validation: (String? value) =>
+                            authController.passwordValidation(value!),
+                        underLineBorder: true,
+                      ),
+                    ],
                   ),
-                ],
-              ),
+                ),
+                Obx(
+                  () => authController.isLoading.value
+                      ? const Padding(
+                          padding: EdgeInsets.all(12),
+                          child: CircularProgressIndicator(),
+                        )
+                      : CommonTextButton(
+                          onPressed: () {
+                            authController.matchLoginForm;
+                            if (authController.matchLoginForm) {
+                              authController.submitForm(true, context);
+                            }
+                          },
+                          text: 'Login',
+                          elevation: 2,
+                          horizontal: Get.width / 30,
+                          vertical: Get.height / 40,
+                        ),
+                ),
+                CommonTextButton(
+                  onPressed: () {
+                    Get.to(ForgotPassword());
+                  },
+                  text: 'Forgot Password ?',
+                  color: AppColor.black,
+                  textSize: 15,
+                  fontWeight: FontWeight.w500,
+                  vertical: 0,
+                  onlyText: true,
+                )
+              ],
             ),
-            Obx(
-              () => authController.isLoading.value
-                  ? const Padding(
-                      padding: EdgeInsets.all(12),
-                      child: CircularProgressIndicator(),
-                    )
-                  : CommonTextButton(
-                      onPressed: () {
-                        authController.matchLoginForm;
-                        if (authController.matchLoginForm) {
-                          authController.submitForm(true, context);
-                        }
-                      },
-                      text: 'Login',
-                      elevation: 2,
-                      horizontal: Get.width / 30,
-                      vertical: Get.height / 40,
-                    ),
-            ),
-            CommonTextButton(
-              onPressed: () {
-                Get.to(ForgotPassword());
-              },
-              text: 'Forgot Password ?',
-              color: AppColor.black,
-              textSize: 15,
-              fontWeight: FontWeight.w500,
-              vertical: 0,
-              onlyText: true,
-            )
-          ],
-        ),
-      )),
+          ));
+        }
+      ),
     );
   }
 

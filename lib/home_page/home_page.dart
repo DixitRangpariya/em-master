@@ -31,12 +31,12 @@ class HomePage extends StatelessWidget {
                 elevation: 2,
                 backgroundColor: AppColor.white,
                 shadowColor: AppColor.shadowColor,
-                leading: const Padding(
-                  padding: EdgeInsets.all(3),
+                leading: Padding(
+                  padding: const EdgeInsets.all(3),
                   child: CircleAvatar(
                     backgroundColor: AppColor.textColorDark,
                     child: CustomText(
-                      'N',
+                      controller.username[0],
                       color: AppColor.white,
                       size: 18,
                     ),
@@ -46,16 +46,16 @@ class HomePage extends StatelessWidget {
                 title: Column(
                   mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                   crossAxisAlignment: CrossAxisAlignment.start,
-                  children: const [
-                    CustomText(
+                  children: [
+                    const CustomText(
                       'Welcome!',
                       color: AppColor.textColorDark,
                       fontWeight: FontWeight.w300,
                       size: 20,
                     ),
-                    SizeBoxH(5),
+                    const SizeBoxH(5),
                     CustomText(
-                      'Neel',
+                      controller.username,
                       size: 20,
                       color: AppColor.textColorDark,
                       fontWeight: FontWeight.w600,
@@ -81,7 +81,7 @@ class HomePage extends StatelessWidget {
                       child: Column(
                         children: [
                           TextFormField(
-                            controller: controller.serch,
+                            controller: controller.search,
                             decoration: const InputDecoration(
                                 hintText: 'Search By Category',
                                 border: OutlineInputBorder(
@@ -118,7 +118,9 @@ class HomePage extends StatelessWidget {
                               if (!snapshot.hasData) {}
                               if (snapshot.connectionState ==
                                   ConnectionState.waiting) {}
-                              if (snapshot.data?.data() == null) {}
+                              if (snapshot.data?.data() == null) {
+                                return Text('Loading');
+                              }
                               return Card(
                                 margin: EdgeInsets.zero,
                                 elevation: 3,
@@ -161,7 +163,7 @@ class HomePage extends StatelessWidget {
                         ],
                       ),
                     ),
-                    controller.serch.text.trim().isNotEmpty
+                    controller.search.text.trim().isNotEmpty
                         ? StreamBuilder<QuerySnapshot>(
                             stream: controller.serchMethode(),
                             builder: (context, snapshot) {

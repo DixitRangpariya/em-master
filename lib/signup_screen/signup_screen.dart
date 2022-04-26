@@ -22,81 +22,101 @@ class SignUpScreen extends StatelessWidget {
     return SafeArea(
       child: Scaffold(
           appBar: _buildAppBar(),
-          body: SingleChildScrollView(
-            child: Padding(
-              padding: EdgeInsets.symmetric(horizontal: Get.width / 25),
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.center,
-                children: [
-                  Image.asset(AppImage.logoL, width: Get.width / 3),
-                  const CustomText(
-                    '\n    SignUp with Expanse Manager   ',
-                    size: 20,
-                    textAlign: TextAlign.start,
-                    fontWeight: FontWeight.w600,
-                  ),
-                  const CustomText(
-                    '\n      Keep your financial data store to our server\n    so that you can access from anywhere you want    ',
-                    size: 13,
-                    height: 1.3,
-                    textAlign: TextAlign.center,
-                  ),
-                  Form(
-                    key: authController.formKey,
-                    child: Column(
-                      children: [
-                        CommonTextFormField(
-                          hintText: 'Your Name',
-                          controller: authController.username,
-                          validation: (String? value) {
-                            return authController.userNameValidation(value!);
-                          },
-                        ),
-                        CommonTextFormField(
-                          hintText: 'Email',
-                          controller: authController.email,
-                          validation: (String? value) =>
-                              authController.emailValidation(value!),
-                        ),
-                        CommonTextFormField(
-                            hintText: 'Password',
-                            controller: authController.password,
-                            suffixIcon: Icon(Icons.remove_red_eye),
-                            validation: (String? value) {
-                              return authController.passwordValidation(value!);
-                            }),
-                        CommonTextFormField(
-                          hintText: 'Conform Password',
-                          controller: authController.conformPassword,
-                          suffixIcon: Icon(Icons.remove_red_eye),
-                          validation: (String? value) {
-                            return authController.confPassValidation(value!);
-                          },
-                        ),
-                      ],
+          body: GetBuilder<AuthController>(
+            init: authController,
+            builder: (controller) => SingleChildScrollView(
+              child: Padding(
+                padding: EdgeInsets.symmetric(horizontal: Get.width / 25),
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.center,
+                  children: [
+                    Image.asset(AppImage.logoL, width: Get.width / 3),
+                    const CustomText(
+                      '\n    SignUp with Expanse Manager   ',
+                      size: 20,
+                      textAlign: TextAlign.start,
+                      fontWeight: FontWeight.w600,
                     ),
-                  ),
-                  Obx(
-                    () => authController.isLoading.value
-                        ? const Padding(
-                            padding: EdgeInsets.all(13),
-                            child: CircularProgressIndicator(),
-                          )
-                        : CommonTextButton(
-                            onPressed: () {
-                              authController.matchAllField;
-                              //  authController.formKey.currentState?.validate();
-                              if (authController.matchAllField) {
-                                authController.submitForm(false, context);
-                              }
+                    const CustomText(
+                      '\n      Keep your financial data store to our server\n    so that you can access from anywhere you want    ',
+                      size: 13,
+                      height: 1.3,
+                      textAlign: TextAlign.center,
+                    ),
+                    Form(
+                      key: authController.formKey,
+                      child: Column(
+                        children: [
+                          CommonTextFormField(
+                            hintText: 'Your Name',
+                            controller: authController.username,
+                            validation: (String? value) {
+                              return authController.userNameValidation(value!);
                             },
-                            text: 'Sign Up',
-                            elevation: 2,
-                            horizontal: Get.width / 30,
-                            vertical: Get.height / 40,
                           ),
-                  )
-                ],
+                          CommonTextFormField(
+                            hintText: 'Email',
+                            controller: authController.email,
+                            validation: (String? value) =>
+                                authController.emailValidation(value!),
+                          ),
+                          CommonTextFormField(
+                              hintText: 'Password',
+                              controller: authController.password,
+                              obscureText: authController.passwordBool,
+                              suffixIcon: IconButton(
+                                onPressed: () => authController.showPassword,
+                                icon: Icon(
+                                 !authController.passwordBool
+                                      ? Icons.remove_red_eye
+                                      : Icons.visibility_off,
+                                ),
+                              ),
+                              validation: (String? value) {
+                                return authController
+                                    .passwordValidation(value!);
+                              }),
+                          CommonTextFormField(
+                            hintText: 'Conform Password',
+                            controller: authController.conformPassword,
+                            obscureText: authController.conformPasswordBool,
+                              suffixIcon: IconButton(
+                                onPressed: () => authController.showConPassword,
+                                icon: Icon(
+                                 !authController.conformPasswordBool
+                                      ? Icons.remove_red_eye
+                                      : Icons.visibility_off,
+                                ),
+                              ),
+                            validation: (String? value) {
+                              return authController.confPassValidation(value!);
+                            },
+                          ),
+                        ],
+                      ),
+                    ),
+                    Obx(
+                      () => authController.isLoading.value
+                          ? const Padding(
+                              padding: EdgeInsets.all(13),
+                              child: CircularProgressIndicator(),
+                            )
+                          : CommonTextButton(
+                              onPressed: () {
+                                authController.matchAllField;
+                                //  authController.formKey.currentState?.validate();
+                                if (authController.matchAllField) {
+                                  authController.submitForm(false, context);
+                                }
+                              },
+                              text: 'Sign Up',
+                              elevation: 2,
+                              horizontal: Get.width / 30,
+                              vertical: Get.height / 40,
+                            ),
+                    )
+                  ],
+                ),
               ),
             ),
           )),

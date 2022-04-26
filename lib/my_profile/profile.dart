@@ -4,9 +4,6 @@ import 'package:expanse_manage/common_widget/common_textbutton.dart';
 import 'package:expanse_manage/my_profile/change_password.dart';
 import 'package:expanse_manage/my_profile/mobail.dart';
 import 'package:expanse_manage/my_profile/my_profile_controller.dart';
-import 'package:expanse_manage/screens/about.dart';
-import 'package:expanse_manage/screens/creditcard/addcard.dart';
-import 'package:expanse_manage/screens/creditcard/card.dart';
 import 'package:expanse_manage/signup_screen/signup_controller.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
@@ -14,134 +11,102 @@ import 'package:get/get.dart';
 import 'package:syncfusion_flutter_pdf/pdf.dart';
 
 import '../common_widget/common_text.dart';
+import '../common_widget/widget.dart';
 import '../res/app_color.dart';
+import '../res/app_image.dart';
+import '../screens/about.dart';
 
 class Profile extends StatelessWidget {
   final myProfileController = Get.put(MyProfileController());
-  final signUpController = Get.put(Signupcontroller());
 
   Profile({Key? key}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: CommonAppBar(title: 'Profile', hasBackIcon: false),
+      appBar: CommonAppBar(
+          hasBackIcon: false,
+          actionIcon:
+              IconButton(onPressed: () {}, icon: const Icon(Icons.edit)),
+          titleWidget: const CustomText('Profile',
+              size: 20,
+              textAlign: TextAlign.start,
+              fontWeight: FontWeight.w600)),
       body: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          Container(
-            decoration: BoxDecoration(
-                borderRadius: BorderRadius.circular(60),
-                border: Border.all(
-                  width: 4,
-                  color: AppColor.darkBlue,
-                  style: BorderStyle.solid,
-                )),
-            child: const CircleAvatar(
-              radius: 50.0,
-              // backgroundImage: AssetImage(AppImage.profile),
-              backgroundColor: AppColor.darkBlue,
-              // child: ClipRRect(
-              //   child: Image.asset(AppImage.profile),
-              //   borderRadius: BorderRadius.circular(100.0),
-              // ),
+          Align(
+              alignment: Alignment.topCenter,
+              child: Column(
+                children: [
+                  CircleImageFromAsset(
+                    AppImage.logoM,
+                    size: Get.height / 8,
+                  ),
+                  CustomText(
+                    '\n${myProfileController.username}\n',
+                    size: 18,
+                    fontWeight: FontWeight.w600,
+                  ),
+                  CustomText(
+                    myProfileController.email,
+                    color: AppColor.textGrey,
+                    size: 14,
+                  ),
+                ],
+              )),
+          const SizeBoxH(10),
+          buildButton(text: 'Setting', onPressed: () {}),
+          buildButton(
+              text: 'Archive',
+              onPressed: () {
+                generatePDF();
+              }),
+          buildButton(text: 'Invite Friend', onPressed: () {}),
+          buildButton(
+            text: 'About us',
+            onPressed: () => Get.to(
+              const AboutUs(),
             ),
           ),
-          SizedBox(
-            height: 20,
-          ),
-          Column(
-            crossAxisAlignment: CrossAxisAlignment.center,
-            children: [
-              CustomText("Username",
-                  fontWeight: FontWeight.w500,
-                  size: 15,
-                  color: Colors.black.withOpacity(0.4)),
-              const SizedBox(
-                height: 10,
-              ),
-              const CustomText(
-                "Dixit Rangpariya",
-                fontWeight: FontWeight.bold,
-                size: 20,
-              ),
-            ],
-          ),
-          const SizedBox(
-            height: 20,
-          ),
-          const SizedBox(
-            height: 5,
-          ),
-          Padding(
-            padding: const EdgeInsets.only(right: 150),
-            child:
-                Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
-              buildTextButton(
-                  onPressed: () {
-                    Get.to(ChangePassword());
-                  },
-                  text: 'Change Password'),
-              buildTextButton(
-                  onPressed: () {
-                    myProfileController.logOut();
-                  },
-                  text: 'Logout'),
-              buildTextButton(
-                  onPressed: () {
-                    Get.to(Aboutus());
-                  },
-                  text: 'About Us'),
-              buildTextButton(
-                  onPressed: () {
-                    Get.to(generatepdf());
-                  },
-                  text: 'Export Data'),
-              buildTextButton(
-                  onPressed: () {
-                    Get.to(Cardadd());
-                  },
-                  text: 'card Data'),
-            ]),
-          ),
+          buildButton(text: 'Help Center', onPressed: () {}),
+          buildButton(text: 'Logout', onPressed: () {}),
         ],
       ),
     );
   }
 
-  buildTextButton({
-    required VoidCallback onPressed,
-    required String text,
-  }) {
+  Widget buildButton({required String text, required VoidCallback onPressed}) {
     return CommonTextButton(
       onPressed: onPressed,
-      text: text,
-      textSize: 15,
-      color: AppColor.textColorDark,
       onlyText: true,
-      horizontal: Get.width * 0.02,
-      vertical: Get.height * 0.0001,
+      text: text,
+      color: AppColor.black,
+      fontWeight: FontWeight.w500,
+      textSize: 15,
+      textAlign: TextAlign.start,
+      vertical: 0,
+      horizontal: 30,
     );
   }
 }
 
 List list = [];
 
-Future<void> generatepdf() async {
+Future<void> generatePDF() async {
   final PdfDocument document = PdfDocument();
   var user = FirebaseAuth.instance.currentUser;
   final page = document.pages.add();
   final PdfGrid grid = PdfGrid();
 
-  final pfdgent = await FirebaseFirestore.instance
+  final pfdGent = await FirebaseFirestore.instance
       .collection('users/${user!.uid}/transaction')
       .get();
-  pfdgent.docs.forEach(
-    (value) {
-      print(value.data());
-      print('DAta');
-      return list.add(value);
-    },
-  );
+  for (var value in pfdGent.docs) {
+    print(value.data());
+    print('DAta');
+    return list.add(value);
+  }
   print('Data::::::::::::::::::::::::::::');
   print(list.length);
   final PdfPageTemplateElement headerTemplate =
@@ -163,12 +128,7 @@ Future<void> generatepdf() async {
 
   for (var i = 0; i < list.length; i++) {
     row = grid.rows.add();
-    if (list[i]['isExpanse'] == true) {
-      // row.cells[0].value = list[i]['isExpanse'];
-      row.cells[0].value = 'Expanse';
-    } else {
-      row.cells[0].value = 'Income';
-    }
+    row.cells[0].value = list[i]['isExpanse'];
     row.cells[1].value = list[i]['categoryName'];
     row.cells[2].value = list[i]['transactionDate'];
     row.cells[3].value = list[i]['amount'];
@@ -193,3 +153,128 @@ Future<void> generatepdf() async {
   document.dispose();
   saveAndLaunchFile(bytes, 'e.pdf');
 }
+/*class Profile extends StatelessWidget {
+  final myProfileController = Get.put(MyProfileController());
+  final signUpController = Get.put(Signupcontroller());
+
+  Profile({Key? key}) : super(key: key);
+
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      appBar: CommonAppBar(title: 'Profile', hasBackIcon: false),
+      body: Column(
+        children: [
+          Row(
+            mainAxisAlignment: MainAxisAlignment.spaceAround,
+            children: [
+              Container(
+                decoration: BoxDecoration(
+                    borderRadius: BorderRadius.circular(60),
+                    border: Border.all(
+                      width: 4,
+                      color: AppColor.darkBlue,
+                      style: BorderStyle.solid,
+                    )),
+                child: const CircleAvatar(
+                  radius: 50.0,
+                  // backgroundImage: AssetImage(AppImage.profile),
+                  backgroundColor: AppColor.darkBlue,
+                  // child: ClipRRect(
+                  //   child: Image.asset(AppImage.profile),
+                  //   borderRadius: BorderRadius.circular(100.0),
+                  // ),
+                ),
+              ),
+              Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  CustomText("Username",
+                      fontWeight: FontWeight.w500,
+                      size: 20,
+                      color: Colors.black.withOpacity(0.4)),
+                  const SizedBox(
+                    height: 10,
+                  ),
+                  CustomText(
+                    myProfileController.username,
+                    fontWeight: FontWeight.bold,
+                    size: 18,
+                  ),
+                ],
+              ),
+            ],
+          ),
+          const SizedBox(
+            height: 30,
+          ),
+          Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children:  [
+              const CustomText(
+                "Email",
+                fontWeight: FontWeight.w600,
+                size: 12,
+              ),
+              const SizedBox(
+                height: 10,
+              ),
+              CustomText(
+                myProfileController.email,
+                fontWeight: FontWeight.bold,
+                size: 18,
+              ),
+              const SizedBox(
+                height: 25,
+              ),
+            ],
+          ),
+          const SizedBox(
+            height: 5,
+          ),
+          Padding(
+            padding: const EdgeInsets.only(right: 150),
+            child:
+                Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
+              buildTextButton(
+                  onPressed: () {
+                    Get.to(ChangePassword());
+                  },
+                  text: 'Change Password'),
+              buildTextButton(
+                  onPressed: () {
+                    myProfileController.logOut();
+                  },
+                  text: 'Logout'),
+              buildTextButton(
+                  onPressed: () {
+                    // Get.to(ChangePassword());
+                  },
+                  text: 'About Us'),
+              buildTextButton(
+                  onPressed: () {
+                    Get.to(generatepdf());
+                  },
+                  text: 'Export Data'),
+            ]),
+          ),
+        ],
+      ),
+    );
+  }
+
+  buildTextButton({
+    required VoidCallback onPressed,
+    required String text,
+  }) {
+    return CommonTextButton(
+      onPressed: onPressed,
+      text: text,
+      textSize: 15,
+      color: AppColor.textColorDark,
+      onlyText: true,
+      horizontal: Get.width * 0.02,
+      vertical: Get.height * 0.0001,
+    );
+  }
+}*/

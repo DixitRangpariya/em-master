@@ -10,11 +10,32 @@ import 'package:shared_preferences/shared_preferences.dart';
 class MyProfileController extends GetxController {
   TextEditingController changePassword = TextEditingController();
   final myProFormKey = GlobalKey<FormState>();
-
+  String username = '';
+  String email = '';
   var currentUser = FirebaseAuth.instance.currentUser;
   var fireStore = FirebaseFirestore.instance;
   final Stream<QuerySnapshot> userStream =
       FirebaseFirestore.instance.collection('user').snapshots();
+
+  @override
+  void onInit() {
+    super.onInit();
+    fetchUserData();
+  }
+
+  Future<void> fetchUserData() async {
+    await FirebaseFirestore.instance
+        .doc('users/${currentUser!.uid}')
+        .get()
+        .then(
+      (value) {
+        username = value.data()!['username'];
+        email = value.data()!['email'];
+        debugPrint('$username\n$email');
+      },
+    );
+    update();
+  }
 
   logOut() async {
     final pref = await SharedPreferences.getInstance();

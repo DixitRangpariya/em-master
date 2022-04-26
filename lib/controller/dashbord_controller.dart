@@ -1,13 +1,17 @@
+
+
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:expanse_manage/res/app_color.dart';
 import 'package:firebase_auth/firebase_auth.dart';
-import 'package:flutter/cupertino.dart';
+
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import 'package:get/get_state_manager/get_state_manager.dart';
+
 
 class DashBoardController extends GetxController {
-  TextEditingController serch = TextEditingController();
+  TextEditingController search = TextEditingController();
+  String username = '';
+  String email = '';
   List userData = [];
   List getIncome = [];
   final currentUser = FirebaseAuth.instance.currentUser;
@@ -32,6 +36,12 @@ class DashBoardController extends GetxController {
   ];
   final int month = DateTime.now().month;
 
+  @override
+  void onInit() {
+    super.onInit();
+    fetchUserData();
+  }
+
   Stream<QuerySnapshot<Object?>> fetchTransaction() {
     var data = FirebaseFirestore.instance
         .collection('users/${currentUser!.uid}/transaction')
@@ -43,6 +53,20 @@ class DashBoardController extends GetxController {
     //   List<Model> model = info;
     // });
     return data;
+  }
+
+  Future<void> fetchUserData() async {
+    await FirebaseFirestore.instance
+        .doc('users/${currentUser!.uid}')
+        .get()
+        .then(
+          (value) {
+            username = value.data()!['username'];
+            email = value.data()!['email'];
+            debugPrint('$username\n$email');
+          },
+        );
+    update();
   }
 
   Future<void> deleteTransaction(String docID, bool isExpanse) async {
@@ -128,10 +152,11 @@ class DashBoardController extends GetxController {
   }
 
   late Map<String, dynamic> category;
+
   Stream<QuerySnapshot> serchMethode() {
     final transaction = FirebaseFirestore.instance
         .collection('users/${currentUser!.uid}/transaction')
-        .where('categoryName', isEqualTo: serch.text)
+        .where('categoryName', isEqualTo: search.text)
         .snapshots();
     update();
     return transaction;

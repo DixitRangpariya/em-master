@@ -15,6 +15,9 @@ class AuthController extends GetxController {
   TextEditingController email = TextEditingController();
   TextEditingController password = TextEditingController();
   TextEditingController conformPassword = TextEditingController();
+  bool passwordBool = true;
+  bool conformPasswordBool = true;
+  bool logPasswordBool = true;
 
   //Signup screen Form Key
   final formKey = GlobalKey<FormState>();
@@ -47,6 +50,27 @@ class AuthController extends GetxController {
 
   bool get matchLoginForm {
     return loginFormKey.currentState!.validate();
+  }
+
+  bool get showPassword {
+    var value = passwordBool = !passwordBool;
+    debugPrint('$value');
+    update();
+    return value;
+  }
+
+  bool get showConPassword {
+    var value = conformPasswordBool = !conformPasswordBool;
+    debugPrint('$value');
+    update();
+    return value;
+  }
+
+  bool get showLogPassword {
+    var value = logPasswordBool = !logPasswordBool;
+    debugPrint('$value');
+    update();
+    return value;
   }
 
   emailValidation(String value) {

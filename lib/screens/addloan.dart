@@ -11,26 +11,24 @@ import '../common_widget/common_appbar.dart';
 import '../controller/feture_controller.dart';
 import '../res/app_color.dart';
 
-class Addloan extends StatefulWidget {
-  const Addloan({Key? key}) : super(key: key);
+class AddLoan extends StatefulWidget {
+  const AddLoan({Key? key}) : super(key: key);
 
   @override
-  State<Addloan> createState() => _AddloanState();
+  State<AddLoan> createState() => _AddLoanState();
 }
 
-class _AddloanState extends State<Addloan> {
+class _AddLoanState extends State<AddLoan> {
   final controller = Get.put(FeaturesController());
   @override
   Widget build(BuildContext context) {
     return Scaffold(
         appBar: CommonAppBar(
-          title: 'Add Loan',
-          hasBackIcon: true,
-        ),
+            title: 'Add Loan', hasBackIcon: true, actionIcon: const Icon(Icons.add)),
         body: Column(
           children: [
             Card(
-              color: Color.fromARGB(245, 235, 242, 252),
+              color: const Color.fromARGB(245, 235, 242, 252),
               margin: const EdgeInsets.all(20),
               elevation: 0,
               shape: RoundedRectangleBorder(
@@ -43,15 +41,15 @@ class _AddloanState extends State<Addloan> {
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
-                      SizedBox(
+                      const SizedBox(
                         height: 10,
                       ),
-                      CustomText(
+                      const CustomText(
                         'Make a Loans',
                         size: 20,
                         fontWeight: FontWeight.w500,
                       ),
-                      SizedBox(
+                      const SizedBox(
                         height: 10,
                       ),
                       CustomText(
@@ -66,7 +64,7 @@ class _AddloanState extends State<Addloan> {
                         },
                         child: Row(
                           mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                          children: [
+                          children: const [
                             Icon(Icons.add_box_rounded,
                                 size: 25, color: AppColor.white),
                             Text(
@@ -86,7 +84,7 @@ class _AddloanState extends State<Addloan> {
               stream: controller.fetchloan(),
               builder: (context, snapshot) {
                 if (!snapshot.hasData) {
-                  return Text('No Data available');
+                  return const Text('No Data available');
                 }
                 if (snapshot.connectionState == ConnectionState.waiting) {
                   return const Center(
@@ -101,76 +99,81 @@ class _AddloanState extends State<Addloan> {
                       itemBuilder: (context, index) {
                         var data = snapshot.data!.docs[index];
                         DateTime date = DateTime.parse(data['date']);
-                        return Container(
-                          margin: const EdgeInsets.all(20),
+                        return Stack(
+                          children: [
+                            Container(
+                              margin: const EdgeInsets.all(20),
 
-                          decoration: BoxDecoration(
-                              borderRadius: BorderRadius.circular(20),
-                              //elevation:2,
-                              gradient: const LinearGradient(
-                                stops: [
-                                  0.13,
-                                  0.90,
-                                ],
-                                begin: Alignment.bottomLeft,
-                                end: Alignment.topRight,
-                                colors: [
-                                  Color.fromARGB(255, 50, 67, 114),
-                                  Color.fromARGB(255, 80, 114, 172),
-                                ],
-                              )),
-                          // height: 180,
-                          width: double.infinity,
-                          child: Padding(
-                            padding: const EdgeInsets.all(20),
-                            child: Column(
-                              crossAxisAlignment: CrossAxisAlignment.start,
-                              children: [
-                                CustomText(
-                                  'Loan Name : ${data['loan_name']}',
-                                  size: 20,
-                                  fontWeight: FontWeight.w600,
-                                  color: Colors.white,
+                              decoration: BoxDecoration(
+                                  borderRadius: BorderRadius.circular(20),
+                                  //elevation:2,
+                                  gradient: const LinearGradient(
+                                    stops: [
+                                      0.13,
+                                      0.90,
+                                    ],
+                                    begin: Alignment.bottomLeft,
+                                    end: Alignment.topRight,
+                                    colors: [
+                                      Color.fromARGB(255, 50, 67, 114),
+                                      Color.fromARGB(255, 80, 114, 172),
+                                    ],
+                                  )),
+                              // height: 180,
+                              width: double.infinity,
+                              child: Padding(
+                                padding: const EdgeInsets.all(20),
+                                child: Column(
+                                  crossAxisAlignment: CrossAxisAlignment.start,
+                                  children: [
+                                    CustomText(
+                                      'Loan Name : ${data['loan_name']}',
+                                      size: 20,
+                                      fontWeight: FontWeight.w600,
+                                      color: Colors.white,
+                                    ),
+                                    const SizedBox(
+                                      height: 10,
+                                    ),
+                                    CustomText(
+                                      'Amount : ₹${data['amount']}',
+                                      size: 15,
+                                      fontWeight: FontWeight.w600,
+                                      color: Colors.white,
+                                    ),
+                                    const SizedBox(
+                                      height: 10,
+                                    ),
+                                    CustomText(
+                                      'Installment : ₹${data['installment']}',
+                                      size: 15,
+                                      fontWeight: FontWeight.w600,
+                                      color: Colors.white,
+                                    ),
+                                    const SizedBox(
+                                      height: 10,
+                                    ),
+                                    CustomText(
+                                      'Percentage : ${data['percentage']}%',
+                                      size: 15,
+                                      fontWeight: FontWeight.w600,
+                                      color: Colors.white,
+                                    ),
+                                    const SizedBox(
+                                      height: 10,
+                                    ),
+                                    CustomText(
+                                      'Installment Date : ${date.day}/${date.month}/${date.year}',
+                                      size: 15,
+                                      fontWeight: FontWeight.w600,
+                                      color: Colors.white,
+                                    ),
+                                  ],
                                 ),
-                                SizedBox(
-                                  height: 10,
-                                ),
-                                CustomText(
-                                  'Amount : ₹${data['amount']}',
-                                  size: 15,
-                                  fontWeight: FontWeight.w600,
-                                  color: Colors.white,
-                                ),
-                                SizedBox(
-                                  height: 10,
-                                ),
-                                CustomText(
-                                  'Installment : ₹${data['installment']}',
-                                  size: 15,
-                                  fontWeight: FontWeight.w600,
-                                  color: Colors.white,
-                                ),
-                                SizedBox(
-                                  height: 10,
-                                ),
-                                CustomText(
-                                  'Amount : ${data['percentage']}%',
-                                  size: 15,
-                                  fontWeight: FontWeight.w600,
-                                  color: Colors.white,
-                                ),
-                                SizedBox(
-                                  height: 10,
-                                ),
-                                CustomText(
-                                  'Installment Date : ${date.day}/${date.month}/${date.year}',
-                                  size: 15,
-                                  fontWeight: FontWeight.w600,
-                                  color: Colors.white,
-                                ),
-                              ],
+                              ),
                             ),
-                          ),
+                            Container(decoration: BoxDecoration(border: CircularBorder),)
+                          ],
                         );
                       }),
                 );
@@ -182,7 +185,7 @@ class _AddloanState extends State<Addloan> {
 
   void bottomsheets(BuildContext context) {
     showModalBottomSheet(
-        barrierColor: Color.fromARGB(255, 87, 87, 87).withOpacity(0.5),
+        barrierColor: const Color.fromARGB(255, 87, 87, 87).withOpacity(0.5),
         elevation: 10,
         isScrollControlled: true,
         shape: const RoundedRectangleBorder(
@@ -203,7 +206,7 @@ class _AddloanState extends State<Addloan> {
                     mainAxisAlignment: MainAxisAlignment.start,
                     children: [
                       Image.asset(AppImage.loan, width: 50, height: 50),
-                      SizedBox(
+                      const SizedBox(
                         height: 10,
                       ),
                       CustomText(
@@ -212,7 +215,7 @@ class _AddloanState extends State<Addloan> {
                         fontWeight: FontWeight.w500,
                         color: AppColor.black.withOpacity(0.5),
                       ),
-                      SizedBox(
+                      const SizedBox(
                         height: 10,
                       ),
                       CommonTextFormField(

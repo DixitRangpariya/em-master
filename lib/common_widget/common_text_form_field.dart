@@ -16,12 +16,14 @@ class CommonTextFormField extends StatelessWidget {
   final bool underLineBorder;
   final int maxLines;
   final AutovalidateMode? autovalidateMode;
+ final  bool obscureText;
 
   const CommonTextFormField(
       {Key? key,
       required this.hintText,
       this.suffixIcon,
       this.prefixIcon,
+        this.obscureText = false,
       this.controller,
       this.padding,
       this.suffixStyle,
@@ -42,6 +44,7 @@ class CommonTextFormField extends StatelessWidget {
       controller: controller,
       keyboardType: keyboardType,
       autofocus: autofocus,
+      obscureText:obscureText ,
       style: TextStyle(fontSize: fontSize),
       validator: validation,
       maxLines: maxLines,
@@ -49,6 +52,7 @@ class CommonTextFormField extends StatelessWidget {
         suffixIcon: suffixIcon,
         prefixIcon: prefixIcon,
         labelText: hintText,
+
         labelStyle: const TextStyle(
             color: AppColor.textColorDark,
             fontSize: 16,

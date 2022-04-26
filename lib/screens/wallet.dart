@@ -35,7 +35,7 @@ class Wallet extends StatelessWidget {
               children: [
                 InkWell(
                   onTap: () {
-                    Get.to(Addloan());
+                    Get.to(AddLoan());
                   },
                   child: Container(
                     decoration: boxDecoration(),
